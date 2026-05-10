@@ -1,0 +1,138 @@
+import type { Category, Place } from '@/types/travel';
+
+export const categories: Category[] = [
+  { name: 'Religious', icon: 'Temple', description: 'Temples, shrines, and pilgrimage sites.' },
+  { name: 'Historical', icon: 'Heritage', description: 'Forts, ruins, and monuments with legacy.' },
+  { name: 'Beaches', icon: 'Coast', description: 'Coastal escapes and sunset views.' },
+  { name: 'Hill Stations', icon: 'Peaks', description: 'Cool-weather retreats and scenic drives.' },
+  { name: 'Adventure', icon: 'Trail', description: 'Trekking, rafting, and outdoor thrills.' },
+  { name: 'Food & Culture', icon: 'Taste', description: 'Local flavors, art, and living traditions.' }
+];
+
+export const places: Place[] = [
+  {
+    id: '1',
+    slug: 'araku-valley',
+    name: 'Araku Valley',
+    category: 'Hill Stations',
+    rating: 4.7,
+    distanceKm: 18,
+    budget: 'Medium',
+    familyFriendly: true,
+    shortDescription: 'A lush Eastern Ghats valley known for coffee estates, viewpoints, and caves.',
+    whyFamous: 'Coffee plantations, tribal culture, and scenic rail routes.',
+    bestTimeToVisit: 'October to February',
+    timings: '6:00 AM - 6:00 PM',
+    entryFee: 'Varies by attraction',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+    gallery: [],
+    nearbyAttractions: ['Borra Caves', 'Tribal Museum', 'Coffee Museum'],
+    latitude: 18.6727,
+    longitude: 82.8769
+  },
+  {
+    id: '2',
+    slug: 'goa-beaches',
+    name: 'Goa Beaches',
+    category: 'Beaches',
+    rating: 4.8,
+    distanceKm: 12,
+    budget: 'High',
+    familyFriendly: true,
+    shortDescription: 'From calm family beaches to vibrant nightlife and water sports.',
+    whyFamous: 'Golden sands, seafood, Portuguese influence, and beach culture.',
+    bestTimeToVisit: 'November to March',
+    timings: 'Open 24/7',
+    entryFee: 'Free',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+    gallery: [],
+    nearbyAttractions: ['Baga Beach', 'Basilica of Bom Jesus', 'Fort Aguada'],
+    latitude: 15.2993,
+    longitude: 74.1240
+  }
+];
+
+export const featuredDestinations = places;
+export const indiaDestinations = [
+  ...places,
+  {
+    id: '3',
+    slug: 'tirupati',
+    name: 'Tirupati',
+    category: 'Religious',
+    rating: 4.9,
+    distanceKm: 6,
+    budget: 'Low',
+    familyFriendly: true,
+    shortDescription: "One of India's most visited pilgrimage destinations.",
+    whyFamous: 'Sri Venkateswara Temple and spiritual significance.',
+    bestTimeToVisit: 'September to March',
+    timings: 'Varies by temple',
+    entryFee: 'Free / donation based',
+    image: 'https://images.unsplash.com/photo-1593691509543-c55fb32a5a5d',
+    gallery: [],
+    nearbyAttractions: ['Sri Padmavathi Temple', 'Talakona Waterfalls', 'Kapila Theertham'],
+    latitude: 13.6288,
+    longitude: 79.4192
+  },
+  {
+    id: '4',
+    slug: 'hampi',
+    name: 'Hampi',
+    category: 'Historical',
+    rating: 4.8,
+    distanceKm: 14,
+    budget: 'Low',
+    familyFriendly: true,
+    shortDescription: 'A UNESCO heritage site of stunning ruins, temples, and boulder landscapes.',
+    whyFamous: 'Vijayanagara Empire history and iconic architecture.',
+    bestTimeToVisit: 'October to February',
+    timings: 'Sunrise to sunset',
+    entryFee: 'Nominal',
+    image: 'https://images.unsplash.com/photo-1579684453423-f84349ef60b0',
+    gallery: [],
+    nearbyAttractions: ['Virupaksha Temple', 'Vittala Temple', 'Hemakuta Hill'],
+    latitude: 15.335,
+    longitude: 76.46
+  },
+  {
+    id: '5',
+    slug: 'jaipur',
+    name: 'Jaipur',
+    category: 'Historical',
+    rating: 4.7,
+    distanceKm: 8,
+    budget: 'Medium',
+    familyFriendly: true,
+    shortDescription: 'The Pink City with forts, palaces, markets, and rich cultural heritage.',
+    whyFamous: 'Amber Fort, Hawa Mahal, and royal architecture.',
+    bestTimeToVisit: 'October to March',
+    timings: 'Varies by attraction',
+    entryFee: 'Varies',
+    image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245',
+    gallery: [],
+    nearbyAttractions: ['City Palace', 'Nahargarh Fort', 'Jantar Mantar'],
+    latitude: 26.9124,
+    longitude: 75.7873
+  },
+  {
+    id: '6',
+    slug: 'manali',
+    name: 'Manali',
+    category: 'Hill Stations',
+    rating: 4.8,
+    distanceKm: 10,
+    budget: 'Medium',
+    familyFriendly: true,
+    shortDescription: 'A popular mountain escape for snow, adventure, and river views.',
+    whyFamous: 'Adventure sports, scenic valleys, and winter charm.',
+    bestTimeToVisit: 'March to June, December to February',
+    timings: 'Open 24/7',
+    entryFee: 'Free',
+    image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d',
+    gallery: [],
+    nearbyAttractions: ['Solang Valley', 'Rohtang Pass', 'Hadimba Temple'],
+    latitude: 32.2396,
+    longitude: 77.1887
+  }
+];

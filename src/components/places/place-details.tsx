@@ -1,0 +1,118 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Bookmark, BookmarkCheck, Star, MapPinned, Clock3, Ticket, Sparkles } from 'lucide-react';
+import type { Place } from '@/types/travel';
+import { createGoogleMapsEmbedUrl } from '@/services/maps';
+import { useSavedPlaces } from '@/context/saved-places-context';
+import { Button } from '@/components/ui/button';
+
+export function PlaceDetails({ place }: { place: Place }) {
+  const mapUrl = createGoogleMapsEmbedUrl(place.latitude, place.longitude);
+  const { isSaved, toggleSavedPlace } = useSavedPlaces();
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setSaved(isSaved(place.id));
+  }, [isSaved, place.id]);
+
+  async function handleSaveToggle() {
+    toggleSavedPlace(place.id);
+    setSaved((current) => !current);
+  }
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_30px_100px_rgba(15,23,42,0.45)]">
+        <div className="relative isolate overflow-hidden">
+          <div className="h-[26rem] bg-cover bg-center" style={{ backgroundImage: `url(${place.image})` }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+          <div className="absolute inset-0 flex items-end p-6 sm:p-8">
+            <div className="max-w-3xl space-y-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full border border-emerald-300 bg-emerald-100 px-3 py-1 text-xs uppercase tracking-[0.25em] text-emerald-900">
+                  {place.category}
+                </span>
+                <span className="flex items-center gap-1 rounded-full border border-emerald-200 bg-white/80 px-3 py-1 text-sm text-emerald-700 backdrop-blur">
+                  <Star className="h-4 w-4" /> {place.rating}
+                </span>
+                <span className="rounded-full border border-emerald-200 bg-white/80 px-3 py-1 text-sm text-slate-700 backdrop-blur">
+                  {place.distanceKm} km away
+                </span>
+              </div>
+              <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">{place.name}</h1>
+              <p className="max-w-2xl text-base leading-7 text-slate-700 sm:text-lg">{place.shortDescription}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-8 p-6 lg:grid-cols-[1.25fr_0.75fr] lg:p-8">
+          <div className="space-y-6">
+            <div className="flex flex-wrap gap-3">
+              <Button type="button" variant="outline" onClick={handleSaveToggle} className="w-fit">
+                {saved ? <BookmarkCheck className="mr-2 h-4 w-4" /> : <Bookmark className="mr-2 h-4 w-4" />}
+                {saved ? 'Saved' : 'Save place'}
+              </Button>
+              <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white/80 px-4 py-2 text-sm text-slate-700">
+                <MapPinned className="h-4 w-4 text-emerald-700" />
+                Scenic travel highlight
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Info icon={Sparkles} label="Why it is famous" value={place.whyFamous} />
+              <Info icon={Clock3} label="Best time to visit" value={place.bestTimeToVisit} />
+              <Info icon={Clock3} label="Timings" value={place.timings} />
+              <Info icon={Ticket} label="Entry fee" value={place.entryFee} />
+            </div>
+            <div className="rounded-3xl border border-emerald-200 bg-white/80 p-4">
+              <h2 className="text-lg font-semibold text-slate-900">Map</h2>
+              <iframe title={`${place.name} map`} src={mapUrl} className="mt-3 h-80 w-full rounded-2xl border border-emerald-200" loading="lazy" />
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-emerald-200 bg-white/80 p-5">
+              <h2 className="text-lg font-semibold text-slate-900">Nearby attractions</h2>
+              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                {place.nearbyAttractions.map((item) => (
+                  <li key={item}>- {item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-emerald-200 bg-white/80 p-5">
+              <h2 className="text-lg font-semibold text-slate-900">Gallery</h2>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                {[place.image, place.image, place.image, place.image].map((image, index) => (
+                  <div
+                    key={index}
+                    className="aspect-square overflow-hidden rounded-2xl bg-cover bg-center"
+                    style={{ backgroundImage: `url(${image})` }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Info({
+  icon: Icon,
+  label,
+  value
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-emerald-200 bg-white/80 p-4">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-emerald-700" />
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{label}</p>
+      </div>
+      <p className="mt-2 text-sm text-slate-700">{value}</p>
+    </div>
+  );
+}
