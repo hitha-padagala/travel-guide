@@ -1,6 +1,7 @@
 import type { Budget, TravelCategory } from '@/types/travel';
 
 export type TravelFilters = {
+  state: string;
   category: TravelCategory | 'All';
   distanceKm: number;
   rating: number;

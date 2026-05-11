@@ -11,6 +11,7 @@ type TravelFiltersContextValue = {
 };
 
 const initialFilters: TravelFilters = {
+  state: 'All',
   category: 'All',
   distanceKm: 50,
   rating: 0,
@@ -33,6 +34,7 @@ export function TravelFiltersProvider({
   const filteredPlaces = useMemo(
     () =>
       places.filter((place) => {
+        const matchesState = filters.state === 'All' || place.state === filters.state;
         const matchesCategory = filters.category === 'All' || place.category === filters.category;
         const matchesDistance = place.distanceKm <= filters.distanceKm;
         const matchesRating = place.rating >= filters.rating;
@@ -45,7 +47,7 @@ export function TravelFiltersProvider({
           place.category.toLowerCase().includes(query) ||
           place.shortDescription.toLowerCase().includes(query);
 
-        return matchesCategory && matchesDistance && matchesRating && matchesBudget && matchesFamily && matchesQuery;
+        return matchesState && matchesCategory && matchesDistance && matchesRating && matchesBudget && matchesFamily && matchesQuery;
       }),
     [filters, places]
   );

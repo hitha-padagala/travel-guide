@@ -19,7 +19,7 @@ export function DestinationGrid({ destinations }: { destinations: Place[] }) {
         <Link
           key={place.id}
           href={`/places/${place.slug}`}
-          className={`group overflow-hidden rounded-3xl border border-emerald-200 bg-white/85 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_20px_60px_rgba(84,121,62,0.08)] animate-fade-up`}
+          className={`group overflow-hidden rounded-3xl border border-emerald-200 bg-white/85 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_20px_60px_rgba(76,78,18,0.08)] animate-fade-up`}
           style={{ animationDelay: `${Math.min(index * 120, 600)}ms` }}
         >
           <div className="relative aspect-[16/10] overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url(${place.image})` }}>

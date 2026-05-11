@@ -1,7 +1,7 @@
 'use client';
 
 import { useTravelFilters } from '@/context/travel-filters-context';
-import { categories } from '@/data/travel-data';
+import { categories, states } from '@/data/travel-data';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -16,6 +16,14 @@ export function FilterBar() {
         value={filters.query}
         onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))}
       />
+      <Select value={filters.state} onChange={(event) => setFilters((current) => ({ ...current, state: event.target.value }))}>
+        <option value="All">All states</option>
+        {states.map((state) => (
+          <option key={state} value={state}>
+            {state}
+          </option>
+        ))}
+      </Select>
       <Select value={filters.category} onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value as typeof current.category }))}>
         <option value="All">All categories</option>
         {categories.map((category) => (

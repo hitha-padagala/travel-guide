@@ -18,6 +18,7 @@ export type Place = {
   id: string;
   slug: string;
   name: string;
+  state: string;
   category: TravelCategory;
   rating: number;
   distanceKm: number;

@@ -10,7 +10,7 @@ export function SectionReveal({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const node = ref.current;
@@ -31,7 +31,7 @@ export function SectionReveal({
     <div
       ref={ref}
       className={`${className} transition-all duration-700 ease-out ${
-        visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-0 opacity-100'
       }`}
     >
       {children}
