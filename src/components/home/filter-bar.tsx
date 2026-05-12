@@ -2,7 +2,6 @@
 
 import { useTravelFilters } from '@/context/travel-filters-context';
 import { categories, states } from '@/data/travel-data';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 
@@ -10,7 +9,7 @@ export function FilterBar() {
   const { filters, setFilters } = useTravelFilters();
 
   return (
-    <div className="grid gap-4 rounded-3xl border border-[#c8d7f2] bg-white/90 p-5 lg:grid-cols-5">
+    <div className="grid gap-4 rounded-3xl border border-[#c8d7f2] bg-white/90 p-5 lg:grid-cols-4">
       <Input
         placeholder="Search places, cities, or temples"
         value={filters.query}
@@ -38,22 +37,6 @@ export function FilterBar() {
         <option value="Medium">Medium</option>
         <option value="High">High</option>
       </Select>
-      <Select value={String(filters.distanceKm)} onChange={(event) => setFilters((current) => ({ ...current, distanceKm: Number(event.target.value) }))}>
-        <option value="10">Within 10 km</option>
-        <option value="25">Within 25 km</option>
-        <option value="50">Within 50 km</option>
-        <option value="100">Within 100 km</option>
-      </Select>
-      <button
-        type="button"
-        onClick={() => setFilters((current) => ({ ...current, familyFriendly: !current.familyFriendly }))}
-        className="rounded-xl border border-[#c8d7f2] bg-white px-4 py-2 text-sm text-slate-800 transition hover:bg-[#eff6ff]"
-      >
-        Family travel {filters.familyFriendly ? 'on' : 'off'}
-      </button>
-      <div className="lg:col-span-5">
-        <Badge className="bg-[#eaf2ff] text-[#1d4ed8]">Guide rating {filters.rating}+</Badge>
-      </div>
     </div>
   );
 }
