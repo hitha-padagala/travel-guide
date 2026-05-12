@@ -34,4 +34,12 @@ export type Place = {
   nearbyAttractions: string[];
   latitude: number;
   longitude: number;
+  recommendedStays?: Recommendation[];
+  recommendedEats?: Recommendation[];
+};
+
+export type Recommendation = {
+  name: string;
+  description: string;
+  type: string;
 };

@@ -10,7 +10,7 @@ export function FilterBar() {
   const { filters, setFilters } = useTravelFilters();
 
   return (
-    <div className="grid gap-4 rounded-3xl border border-emerald-200 bg-white/85 p-5 lg:grid-cols-5">
+    <div className="grid gap-4 rounded-3xl border border-[#c8d7f2] bg-white/90 p-5 lg:grid-cols-5">
       <Input
         placeholder="Search places, cities, or temples"
         value={filters.query}
@@ -47,12 +47,12 @@ export function FilterBar() {
       <button
         type="button"
         onClick={() => setFilters((current) => ({ ...current, familyFriendly: !current.familyFriendly }))}
-        className="rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm text-slate-800 transition hover:bg-emerald-50"
+        className="rounded-xl border border-[#c8d7f2] bg-white px-4 py-2 text-sm text-slate-800 transition hover:bg-[#eff6ff]"
       >
         Family travel {filters.familyFriendly ? 'on' : 'off'}
       </button>
       <div className="lg:col-span-5">
-        <Badge className="bg-emerald-100 text-emerald-900">Guide rating {filters.rating}+</Badge>
+        <Badge className="bg-[#eaf2ff] text-[#1d4ed8]">Guide rating {filters.rating}+</Badge>
       </div>
     </div>
   );

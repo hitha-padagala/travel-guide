@@ -2,14 +2,8 @@ import type { Place } from '@/types/travel';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { places as seedPlaces } from '@/data/travel-data';
 
-export async function getPlacesServer(): Promise<Place[]> {
-  const supabase = createSupabaseServerClient();
-  if (!supabase) return seedPlaces;
-
-  const { data, error } = await supabase.from('places').select('*').order('rating', { ascending: false });
-  if (error || !data?.length) return seedPlaces;
-
-  return data.map((place) => ({
+function mapPlaceRow(place: any): Place {
+  return {
     id: place.id,
     slug: place.slug,
     name: place.name,
@@ -29,7 +23,25 @@ export async function getPlacesServer(): Promise<Place[]> {
     nearbyAttractions: place.nearby_attractions ?? place.nearbyAttractions ?? [],
     latitude: Number(place.latitude),
     longitude: Number(place.longitude)
-  }));
+  };
+}
+
+function mergeWithSeedPlaces(places: Place[]) {
+  const merged = new Map(seedPlaces.map((place) => [place.slug, place]));
+  for (const place of places) {
+    merged.set(place.slug, { ...merged.get(place.slug), ...place });
+  }
+  return Array.from(merged.values());
+}
+
+export async function getPlacesServer(): Promise<Place[]> {
+  const supabase = createSupabaseServerClient();
+  if (!supabase) return seedPlaces;
+
+  const { data, error } = await supabase.from('places').select('*').order('rating', { ascending: false });
+  if (error || !data?.length) return seedPlaces;
+
+  return mergeWithSeedPlaces(data.map(mapPlaceRow));
 }
 
 export async function searchPlacesServer(query: string): Promise<Place[]> {
@@ -54,27 +66,7 @@ export async function searchPlacesServer(query: string): Promise<Place[]> {
 
   if (error || !data?.length) return seedPlaces;
 
-  return data.map((place) => ({
-    id: place.id,
-    slug: place.slug,
-    name: place.name,
-    state: place.state,
-    category: place.category,
-    rating: Number(place.rating),
-    distanceKm: Number(place.distance_km ?? place.distanceKm ?? 0),
-    budget: place.budget,
-    familyFriendly: Boolean(place.family_friendly ?? place.familyFriendly),
-    shortDescription: place.short_description ?? place.shortDescription,
-    whyFamous: place.why_famous ?? place.whyFamous,
-    bestTimeToVisit: place.best_time_to_visit ?? place.bestTimeToVisit,
-    timings: place.timings,
-    entryFee: place.entry_fee ?? place.entryFee,
-    image: place.image,
-    gallery: place.gallery ?? [],
-    nearbyAttractions: place.nearby_attractions ?? place.nearbyAttractions ?? [],
-    latitude: Number(place.latitude),
-    longitude: Number(place.longitude)
-  }));
+  return mergeWithSeedPlaces(data.map(mapPlaceRow));
 }
 
 export async function getPlacesNearServer(lat: number, lng: number): Promise<Place[]> {
@@ -99,27 +91,7 @@ export async function getPlaceBySlugServer(slug: string): Promise<Place | null> 
     return seedPlaces.find((place) => place.slug === slug) ?? null;
   }
 
-  return {
-    id: data.id,
-    slug: data.slug,
-    name: data.name,
-    state: data.state,
-    category: data.category,
-    rating: Number(data.rating),
-    distanceKm: Number(data.distance_km ?? data.distanceKm ?? 0),
-    budget: data.budget,
-    familyFriendly: Boolean(data.family_friendly ?? data.familyFriendly),
-    shortDescription: data.short_description ?? data.shortDescription,
-    whyFamous: data.why_famous ?? data.whyFamous,
-    bestTimeToVisit: data.best_time_to_visit ?? data.bestTimeToVisit,
-    timings: data.timings,
-    entryFee: data.entry_fee ?? data.entryFee,
-    image: data.image,
-    gallery: data.gallery ?? [],
-    nearbyAttractions: data.nearby_attractions ?? data.nearbyAttractions ?? [],
-    latitude: Number(data.latitude),
-    longitude: Number(data.longitude)
-  };
+  return mapPlaceRow(data);
 }
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {

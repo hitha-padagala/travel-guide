@@ -15,11 +15,11 @@ html {
 }
 
 body {
-  @apply bg-[#f4f8ef] text-slate-900 antialiased;
+  @apply bg-[#eaf0fb] text-slate-950 antialiased;
 }
 
 ::selection {
-  @apply bg-emerald-500/25 text-slate-900;
+  @apply bg-blue-500/25 text-slate-900;
 }
 
 @keyframes float-slow {
