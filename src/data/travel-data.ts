@@ -766,6 +766,27 @@ export const places: Place[] = [
     longitude: 88.6065
   },
   {
+    id: '34a',
+    slug: 'bangalore',
+    name: 'Bangalore',
+    state: 'Karnataka',
+    category: 'Food & Culture',
+    rating: 4.8,
+    distanceKm: 0,
+    budget: 'Medium',
+    familyFriendly: true,
+    shortDescription: 'A bustling tech city with gardens, cafes, and a lively city culture.',
+    whyFamous: 'Tech parks, craft breweries, gardens, and a strong food scene.',
+    bestTimeToVisit: 'October to February',
+    timings: 'Varies by attraction',
+    entryFee: 'Varies',
+    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c',
+    gallery: [],
+    nearbyAttractions: ['Lalbagh Botanical Garden', 'Cubbon Park', 'Bangalore Palace'],
+    latitude: 12.9716,
+    longitude: 77.5946
+  },
+  {
     id: '35',
     slug: 'hyderabad',
     name: 'Hyderabad',

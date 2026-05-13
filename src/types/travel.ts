@@ -43,3 +43,47 @@ export type Recommendation = {
   description: string;
   type: string;
 };
+
+export type PlannerStyle = 'Family' | 'Solo' | 'Couple' | 'Adventure' | 'Religious' | 'Food & Culture';
+
+export type TripPlannerRequest = {
+  destination: string;
+  days: number;
+  budget: Budget | 'Flexible';
+  interests: string[];
+  style: PlannerStyle;
+  travelers: number;
+  departureCity?: string;
+};
+
+export type TripPlanDay = {
+  day: number;
+  title: string;
+  morning: string;
+  afternoon: string;
+  evening: string;
+  staySuggestion: string;
+  foodSuggestion: string;
+};
+
+export type TripBudgetItem = {
+  label: string;
+  amount: string;
+  note: string;
+};
+
+export type TripPlan = {
+  destination: string;
+  summary: string;
+  bestFor: string[];
+  totalCost: string;
+  budgetBreakdown: TripBudgetItem[];
+  itinerary: TripPlanDay[];
+  chatSuggestions: string[];
+};
+
+export type TravelChatMessage = {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+};
