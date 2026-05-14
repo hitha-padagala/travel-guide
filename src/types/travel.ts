@@ -45,6 +45,7 @@ export type Recommendation = {
 };
 
 export type PlannerStyle = 'Family' | 'Solo' | 'Couple' | 'Adventure' | 'Religious' | 'Food & Culture';
+export type TravelTransport = 'Car' | 'Train' | 'Plane';
 
 export type TripPlannerRequest = {
   destination: string;
@@ -54,6 +55,7 @@ export type TripPlannerRequest = {
   style: PlannerStyle;
   travelers: number;
   departureCity?: string;
+  transport?: TravelTransport;
 };
 
 export type TripPlanDay = {
@@ -74,6 +76,11 @@ export type TripBudgetItem = {
 
 export type TripPlan = {
   destination: string;
+  state: string;
+  category: TravelCategory | 'Custom';
+  bestTimeToVisit: string;
+  nearbyAttractions: string[];
+  suggestedPlaces?: string[];
   summary: string;
   bestFor: string[];
   totalCost: string;

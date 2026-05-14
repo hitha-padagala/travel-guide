@@ -22,7 +22,10 @@ export function DestinationGrid({ destinations }: { destinations: Place[] }) {
           className={`group overflow-hidden rounded-3xl border border-[#c8d7f2] bg-white/92 transition duration-300 hover:-translate-y-1 hover:bg-[#eff6ff] hover:shadow-[0_20px_60px_rgba(29,78,216,0.08)] animate-fade-up`}
           style={{ animationDelay: `${Math.min(index * 120, 600)}ms` }}
         >
-          <div className="relative aspect-[16/10] overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url(${place.image})` }}>
+          <div
+            className="relative aspect-[16/10] overflow-hidden bg-cover bg-center bg-slate-100"
+            style={{ backgroundImage: `linear-gradient(rgba(30,64,175,0.08), rgba(255,255,255,0.08)), url(${place.image})` }}
+          >
             <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-transparent to-transparent opacity-80 transition duration-300 group-hover:opacity-50" />
             <div className="absolute left-4 top-4 rounded-full border border-[#c8d7f2] bg-white/90 px-3 py-1 text-xs text-[#1d4ed8] backdrop-blur">
               Featured

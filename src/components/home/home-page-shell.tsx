@@ -6,24 +6,22 @@ import { FilterBar } from '@/components/home/filter-bar';
 import { TravelFiltersProvider, useTravelFilters } from '@/context/travel-filters-context';
 import type { Place } from '@/types/travel';
 import { SectionReveal } from '@/components/home/section-reveal';
-import { Globe2 } from 'lucide-react';
-import { stateCategories } from '@/data/travel-data';
+import { Sparkles } from 'lucide-react';
 
 function FilteredDestinations() {
   const { filteredPlaces } = useTravelFilters();
   return <DestinationGrid destinations={filteredPlaces} />;
 }
 
-function StateCategoryView({ places }: { places: Place[] }) {
+function StateCategoryView() {
   const { filters, filteredPlaces } = useTravelFilters();
   const visiblePlaces = filters.state === 'All' ? filteredPlaces : filteredPlaces.filter((place) => place.state === filters.state);
-
-  const grouped = stateCategories.reduce<Record<string, Place[]>>((acc, category) => {
+  const stateLabel = filters.state === 'All' ? 'All states' : filters.state;
+  const orderedCategories = Array.from(new Set(visiblePlaces.map((place) => place.category)));
+  const grouped = orderedCategories.reduce<Record<string, Place[]>>((acc, category) => {
     acc[category] = visiblePlaces.filter((place) => place.category === category);
     return acc;
   }, {});
-
-  const orderedCategories = stateCategories.filter((category) => grouped[category].length > 0);
 
   if (!visiblePlaces.length && (filters.state !== 'All' || filters.category !== 'All')) {
     return (
@@ -36,12 +34,32 @@ function StateCategoryView({ places }: { places: Place[] }) {
     );
   }
 
-  if (!orderedCategories.length) {
+  if (!visiblePlaces.length) {
     return <FilteredDestinations />;
   }
 
   return (
     <div className="space-y-8">
+      <div className="rounded-3xl border border-[#c8d7f2] bg-white/90 p-5 shadow-[0_18px_50px_rgba(29,78,216,0.06)]">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-[#1d4ed8]">Available places</p>
+            <h3 className="mt-2 text-xl font-semibold text-slate-900">{stateLabel}</h3>
+          </div>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#c8d7f2] bg-[#eff6ff] px-3 py-1 text-xs text-[#1d4ed8]">
+            <Sparkles className="h-3.5 w-3.5" />
+            {visiblePlaces.length} places
+          </span>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {orderedCategories.map((category) => (
+            <span key={category} className="rounded-full border border-[#c8d7f2] bg-[#eff6ff] px-3 py-1 text-xs text-[#1d4ed8]">
+              {category} {grouped[category].length}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {orderedCategories.map((category) => (
         <div key={category} className="space-y-4">
           <div className="flex items-center justify-between gap-3">
@@ -83,17 +101,17 @@ export function HomePageShell({ places }: { places: Place[] }) {
           </div>
         </SectionReveal>
 
+        <SectionReveal className="mt-12">
+          <AiPlannerBanner />
+        </SectionReveal>
+
         <SectionReveal className="mt-12 space-y-6">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">Featured destinations</h2>
-            <p className="mt-1 text-slate-700">Select a state to see all its places grouped by category.</p>
+            <p className="mt-1 text-slate-700">Select a state to see the available places for that state and category.</p>
           </div>
           <FilterBar />
-          <StateCategoryView places={places} />
-        </SectionReveal>
-
-        <SectionReveal className="mt-12">
-          <AiPlannerBanner />
+          <StateCategoryView />
         </SectionReveal>
       </div>
     </TravelFiltersProvider>

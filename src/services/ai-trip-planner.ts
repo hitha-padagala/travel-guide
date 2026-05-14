@@ -18,7 +18,7 @@ const destinationAliases: Record<string, string> = {
   newdelhi: 'delhi'
 };
 
-function findPlace(destination: string) {
+export function lookupPlace(destination: string) {
   const normalized = destination.trim().toLowerCase();
   const aliasKey = normalized.replace(/\s+/g, '');
   const aliasMatch = destinationAliases[aliasKey];
@@ -38,7 +38,7 @@ function findPlace(destination: string) {
 }
 
 function resolvePlace(destination: string) {
-  const place = findPlace(destination);
+  const place = lookupPlace(destination);
   if (place) return place;
 
   return (
@@ -66,6 +66,22 @@ function resolvePlace(destination: string) {
   );
 }
 
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const toRad = (value: number) => (value * Math.PI) / 180;
+  const r = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  return 2 * r * Math.asin(Math.sqrt(a));
+}
+
+function resolveDeparturePlace(departureCity?: string) {
+  if (!departureCity) return null;
+  return resolvePlace(departureCity);
+}
+
 function matchingInterests(place: Place, interests: string[]) {
   const categories = interests.flatMap((interest) => interestMap[interest.toLowerCase()] ?? []);
   const combined = categories.includes(place.category) ? [place.category, ...categories] : [place.category, ...categories];
@@ -79,9 +95,19 @@ function formatBudget(days: number, budget: string) {
   return `₹${total.toLocaleString('en-IN')}`;
 }
 
-function buildBudgetBreakdown(days: number, budget: string): TripBudgetItem[] {
+function buildBudgetBreakdown(days: number, budget: string, destination: Place, departure?: Place | null, transport?: TripPlannerRequest['transport']): TripBudgetItem[] {
   const factor = budget === 'Low' ? 0.7 : budget === 'High' ? 1.4 : budget === 'Flexible' ? 1 : 0.9;
+  const travelMultiplier =
+    departure && destination.latitude && destination.longitude && departure.latitude && departure.longitude
+      ? Math.max(1, Math.min(2.5, haversineKm(departure.latitude, departure.longitude, destination.latitude, destination.longitude) / 500))
+      : 1;
+  const transportMultiplier = transport === 'Plane' ? 1.6 : transport === 'Car' ? 0.9 : 0.75;
   return [
+    {
+      label: 'Travel expenditure',
+      amount: `₹${Math.round(3200 * factor * travelMultiplier * transportMultiplier).toLocaleString('en-IN')}`,
+      note: departure ? `Intercity travel from ${departure.name} by ${transport ?? 'train'}` : `Intercity travel to the destination by ${transport ?? 'train'}`
+    },
     { label: 'Stay', amount: `₹${Math.round(2200 * days * factor).toLocaleString('en-IN')}`, note: 'Comfortable stay estimate' },
     { label: 'Food', amount: `₹${Math.round(900 * days * factor).toLocaleString('en-IN')}`, note: 'Meals and snacks' },
     { label: 'Local travel', amount: `₹${Math.round(700 * days * factor).toLocaleString('en-IN')}`, note: 'Taxis, autos, and transfers' },
@@ -90,23 +116,71 @@ function buildBudgetBreakdown(days: number, budget: string): TripBudgetItem[] {
 }
 
 function buildItinerary(place: Place, request: TripPlannerRequest): TripPlanDay[] {
+  const attractionNames = place.nearbyAttractions.length ? place.nearbyAttractions : [place.whyFamous, place.bestTimeToVisit].filter(Boolean);
+  const firstAttraction = attractionNames[0] ?? place.name;
+  const secondAttraction = attractionNames[1] ?? firstAttraction;
+  const thirdAttraction = attractionNames[2] ?? secondAttraction;
+  const transport = request.transport ?? 'Train';
+  const styleHint =
+    request.style === 'Food & Culture'
+      ? 'food trail'
+      : request.style === 'Adventure'
+      ? 'active exploration'
+      : request.style === 'Religious'
+      ? 'pilgrimage rhythm'
+      : request.style === 'Family'
+      ? 'family-friendly pace'
+      : 'flexible sightseeing';
+
   return Array.from({ length: request.days }, (_, index) => {
     const day = index + 1;
     const focus =
       day === 1
-        ? `Start with ${place.name} highlights and an easy orientation walk.`
+        ? `Start with ${firstAttraction} and an easy orientation walk around ${place.name}.`
         : day === request.days
-        ? `Wrap up with a slow morning and a final visit near ${place.name}.`
-        : `Spend the day on nearby attractions and local experiences around ${place.name}.`;
+        ? `Wrap up with a slower day focused on ${thirdAttraction} and a relaxed finish.`
+        : `Spend the day moving through ${secondAttraction} and nearby local experiences.`;
 
     return {
       day,
-      title: day === 1 ? 'Arrival and orientation' : day === request.days ? 'Easy wrap-up' : `Day ${day} exploration`,
-      morning: day === 1 ? `Check in, rest, and explore the main area of ${place.name}.` : `Visit the most important sight near ${place.name}.`,
+      title:
+        day === 1
+          ? `${transport} arrival and ${place.category.toLowerCase()} intro`
+          : day === request.days
+          ? `Wrap-up and ${styleHint}`
+          : `${transport} + ${styleHint} day ${day}`,
+      morning:
+        day === 1
+          ? transport === 'Plane'
+            ? `Land, check in, and take it easy before heading to ${firstAttraction}.`
+            : transport === 'Car'
+            ? `Drive in, rest, and explore ${firstAttraction}.`
+            : `Arrive by train, settle in, and explore ${firstAttraction}.`
+          : transport === 'Plane'
+          ? `Start light after the flight and focus on ${day % 2 === 0 ? secondAttraction : firstAttraction}.`
+          : transport === 'Car'
+          ? `Use the road trip flexibility to start with ${day % 2 === 0 ? secondAttraction : firstAttraction}.`
+          : `Use the train-friendly pace to start with ${day % 2 === 0 ? secondAttraction : firstAttraction}.`,
       afternoon: focus,
-      evening: request.style === 'Food & Culture' ? 'End with a local dinner and market walk.' : 'Enjoy a relaxed dinner and a short evening stroll.',
-      staySuggestion: `${place.state} base near ${place.name}`,
-      foodSuggestion: request.style === 'Food & Culture' ? 'Prioritize local cuisine and signature snacks.' : 'Pick a popular nearby restaurant or cafe.'
+      evening:
+        request.style === 'Food & Culture'
+          ? `End with a local dinner and a short ${place.state ? place.state : 'city'} market walk.`
+          : request.style === 'Adventure'
+          ? 'Enjoy a relaxed dinner and recharge for the next day.'
+          : transport === 'Plane'
+          ? 'Keep the evening light after the flight and settle into the hotel.'
+          : transport === 'Car'
+          ? 'Enjoy a relaxed dinner and a comfortable road-trip finish.'
+          : 'Enjoy a relaxed dinner and a short evening stroll.',
+      staySuggestion: place.state ? `${place.state} base near ${place.name}` : `Stay near the main area of ${place.name}`,
+      foodSuggestion:
+        request.style === 'Food & Culture'
+          ? `Prioritize ${firstAttraction} area specialties and signature snacks.`
+          : transport === 'Plane'
+          ? `Pick a convenient restaurant near the hotel after arrival.`
+          : transport === 'Car'
+          ? `Pick a route-friendly stop close to ${day % 2 === 0 ? secondAttraction : firstAttraction}.`
+          : `Pick a popular nearby restaurant or cafe close to ${day % 2 === 0 ? secondAttraction : firstAttraction}.`
     };
   });
 }
@@ -117,17 +191,39 @@ export async function generateTripPlan(request: TripPlannerRequest): Promise<Tri
 
 function generateTripPlanFallback(request: TripPlannerRequest): TripPlan {
   const place = resolvePlace(request.destination);
+  const departure = resolveDeparturePlace(request.departureCity);
   const interests = place.state ? matchingInterests(place, request.interests) : Array.from(new Set([request.style, ...request.interests.map((item) => item)]));
+  const budgetBreakdown = buildBudgetBreakdown(request.days, request.budget, place, departure, request.transport);
+  const totalCost = budgetBreakdown
+    .map((item) => Number(item.amount.replace(/[^\d]/g, '')))
+    .reduce((sum, value) => sum + value, 0);
+  const travelerMultiplier = Math.max(1, request.travelers);
+  const scaledBreakdown = budgetBreakdown.map((item) => ({
+    ...item,
+    amount: `₹${Math.round(Number(item.amount.replace(/[^\d]/g, '')) * travelerMultiplier).toLocaleString('en-IN')}`
+  }));
+  const scaledTotalCost = scaledBreakdown
+    .map((item) => Number(item.amount.replace(/[^\d]/g, '')))
+    .reduce((sum, value) => sum + value, 0);
+  const suggestedPlaces = place.nearbyAttractions.length
+    ? place.nearbyAttractions.slice(0, 5)
+    : [place.whyFamous, place.bestTimeToVisit].filter(Boolean).slice(0, 3);
 
   return {
     destination: place.name,
+    state: place.state || 'Custom destination',
+    category: place.state ? place.category : 'Custom',
+    bestTimeToVisit: place.bestTimeToVisit,
+    nearbyAttractions: place.nearbyAttractions,
+    suggestedPlaces,
     summary: `${request.days}-day ${request.style.toLowerCase()} trip to ${place.name} with a ${request.budget.toLowerCase()} budget.`,
     bestFor: interests,
-    totalCost: formatBudget(request.days, request.budget),
-    budgetBreakdown: buildBudgetBreakdown(request.days, request.budget),
+    totalCost: `₹${scaledTotalCost.toLocaleString('en-IN')}`,
+    budgetBreakdown: scaledBreakdown,
     itinerary: buildItinerary(place, request),
     chatSuggestions: [
       `Make the trip more ${request.style.toLowerCase()}.`,
+      `Optimize this for ${request.transport ?? 'Train'} travel.`,
       place.state ? `Add more food stops in ${place.state}.` : `Add more local food stops.`,
       `Keep this plan within a ${request.budget.toLowerCase()} budget.`,
       `Suggest a slower pace for day 2.`
