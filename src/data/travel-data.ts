@@ -42,12 +42,42 @@ export const stateCategories = [
 ] as const;
 
 export const categories: Category[] = [
-  { name: 'Religious', icon: 'Temple', description: 'Temples, shrines, and pilgrimage sites.' },
-  { name: 'Historical', icon: 'Heritage', description: 'Forts, ruins, and monuments with legacy.' },
-  { name: 'Beaches', icon: 'Coast', description: 'Coastal escapes and sunset views.' },
-  { name: 'Hill Stations', icon: 'Peaks', description: 'Cool-weather retreats and scenic drives.' },
-  { name: 'Adventure', icon: 'Trail', description: 'Trekking, rafting, and outdoor thrills.' },
-  { name: 'Food & Culture', icon: 'Taste', description: 'Local flavors, art, and living traditions.' }
+  {
+    name: 'Religious',
+    icon: 'Temple',
+    description: 'Temples, shrines, and pilgrimage sites.',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada'
+  },
+  {
+    name: 'Historical',
+    icon: 'Heritage',
+    description: 'Forts, ruins, and monuments with legacy.',
+    image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b'
+  },
+  {
+    name: 'Beaches',
+    icon: 'Coast',
+    description: 'Coastal escapes and sunset views.',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'
+  },
+  {
+    name: 'Hill Stations',
+    icon: 'Peaks',
+    description: 'Cool-weather retreats and scenic drives.',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'
+  },
+  {
+    name: 'Adventure',
+    icon: 'Trail',
+    description: 'Trekking, rafting, and outdoor thrills.',
+    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee'
+  },
+  {
+    name: 'Food & Culture',
+    icon: 'Taste',
+    description: 'Local flavors, art, and living traditions.',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836'
+  }
 ];
 
 export const places: Place[] = [
@@ -108,7 +138,7 @@ export const places: Place[] = [
     bestTimeToVisit: 'September to March',
     timings: 'Varies by temple',
     entryFee: 'Free / donation based',
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada',
+    image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29',
     gallery: [],
     nearbyAttractions: ['Sri Padmavathi Temple', 'Talakona Waterfalls', 'Kapila Theertham'],
     latitude: 13.6288,
@@ -192,7 +222,7 @@ export const places: Place[] = [
     bestTimeToVisit: 'October to March',
     timings: 'Open 24/7',
     entryFee: 'Free',
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada',
+    image: 'https://images.unsplash.com/photo-1514222134-b57cbb8ce073',
     gallery: [],
     nearbyAttractions: ['Dashashwamedh Ghat', 'Kashi Vishwanath Temple', 'Sarnath'],
     latitude: 25.3176,
@@ -213,7 +243,7 @@ export const places: Place[] = [
     bestTimeToVisit: 'October to March',
     timings: 'Open 24/7',
     entryFee: 'Free',
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada',
+    image: 'https://images.unsplash.com/photo-1503264116251-35a269479413',
     gallery: [],
     nearbyAttractions: ['Dashashwamedh Ghat', 'Manikarnika Ghat', 'Sarnath'],
     latitude: 25.3077,
@@ -297,7 +327,7 @@ export const places: Place[] = [
     bestTimeToVisit: 'October to March',
     timings: 'Sunrise to sunset',
     entryFee: 'Nominal',
-    image: 'https://images.unsplash.com/photo-1524492449090-aaf5f2271f33',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada',
     gallery: [],
     nearbyAttractions: ['Dhamek Stupa', 'Sarnath Museum', 'Mulagandha Kuti Vihar'],
     latitude: 25.3753,
@@ -318,7 +348,7 @@ export const places: Place[] = [
     bestTimeToVisit: 'October to March',
     timings: 'Open 24/7',
     entryFee: 'Free',
-    image: 'https://images.unsplash.com/photo-1593691509543-c55fb32a5a5d',
+    image: 'https://images.unsplash.com/photo-1503264116251-35a269479413',
     gallery: [],
     nearbyAttractions: ['Krishna Janmabhoomi', 'Dwarkadhish Temple', 'Vishram Ghat'],
     latitude: 27.4924,
@@ -360,7 +390,7 @@ export const places: Place[] = [
     bestTimeToVisit: 'October to March',
     timings: 'Sunrise to sunset',
     entryFee: 'Nominal',
-    image: 'https://images.unsplash.com/photo-1524492449090-aaf5f2271f33',
+    image: 'https://images.unsplash.com/photo-1593691509543-c55fb32a5a5d',
     gallery: [],
     nearbyAttractions: ['Buland Darwaza', 'Panch Mahal', 'Tomb of Salim Chishti'],
     latitude: 27.0937,
@@ -428,6 +458,69 @@ export const places: Place[] = [
     nearbyAttractions: ['Alleppey', 'Kumarakom', 'Vembanad Lake'],
     latitude: 9.4981,
     longitude: 76.3388
+  },
+  {
+    id: '9a',
+    slug: 'sabarimala',
+    name: 'Sabarimala',
+    state: 'Kerala',
+    category: 'Religious',
+    rating: 4.9,
+    distanceKm: 0,
+    budget: 'Low',
+    familyFriendly: true,
+    shortDescription: 'A major pilgrimage hill shrine nestled in the Western Ghats.',
+    whyFamous: 'A hugely visited Ayyappa temple and one of South India’s major pilgrimage circuits.',
+    bestTimeToVisit: 'November to January',
+    timings: 'Seasonal access',
+    entryFee: 'Free',
+    image: 'https://images.unsplash.com/photo-1548013146-72479768bada',
+    gallery: [],
+    nearbyAttractions: ['Pamba River', 'Periyar Tiger Reserve', 'Pathanamthitta'],
+    latitude: 9.433,
+    longitude: 77.083
+  },
+  {
+    id: '9b',
+    slug: 'guruvayur-temple',
+    name: 'Guruvayur Temple',
+    state: 'Kerala',
+    category: 'Religious',
+    rating: 4.9,
+    distanceKm: 0,
+    budget: 'Low',
+    familyFriendly: true,
+    shortDescription: 'A beloved Krishna temple town known for devotion and rituals.',
+    whyFamous: 'One of Kerala’s most important temples and a major pilgrimage destination.',
+    bestTimeToVisit: 'October to March',
+    timings: 'Open 24/7',
+    entryFee: 'Free',
+    image: 'https://images.unsplash.com/photo-1524492449090-aaf5f2271f33',
+    gallery: [],
+    nearbyAttractions: ['Mammiyur Temple', 'Chavakkad Beach', 'Punnathur Kotta'],
+    latitude: 10.5947,
+    longitude: 76.0386
+  },
+  {
+    id: '9c',
+    slug: 'padmanabhaswamy-temple',
+    name: 'Padmanabhaswamy Temple',
+    state: 'Kerala',
+    category: 'Religious',
+    rating: 4.9,
+    distanceKm: 0,
+    budget: 'Low',
+    familyFriendly: true,
+    shortDescription: 'A renowned temple in Thiruvananthapuram with striking Dravidian architecture.',
+    whyFamous: 'Iconic Vishnu temple and one of Kerala’s most famous spiritual landmarks.',
+    bestTimeToVisit: 'October to March',
+    timings: 'Morning to evening',
+    entryFee: 'Free',
+    image: 'https://images.unsplash.com/photo-1524492449090-aaf5f2271f33',
+    gallery: [],
+    nearbyAttractions: ['Kuthira Malika', 'Shangumugham Beach', 'Napier Museum'],
+    latitude: 8.4824,
+    longitude: 76.9436
   },
   {
     id: '10',

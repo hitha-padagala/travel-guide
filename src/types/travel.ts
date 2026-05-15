@@ -12,6 +12,7 @@ export type Category = {
   name: TravelCategory;
   icon: string;
   description: string;
+  image?: string;
 };
 
 export type Place = {

@@ -29,7 +29,13 @@ function mapPlaceRow(place: any): Place {
 function mergeWithSeedPlaces(places: Place[]) {
   const merged = new Map(seedPlaces.map((place) => [place.slug, place]));
   for (const place of places) {
-    merged.set(place.slug, { ...merged.get(place.slug), ...place });
+    const seed = merged.get(place.slug);
+    merged.set(place.slug, {
+      ...seed,
+      ...place,
+      image: seed?.image ?? place.image,
+      gallery: seed?.gallery?.length ? seed.gallery : place.gallery
+    });
   }
   return Array.from(merged.values());
 }
@@ -91,7 +97,14 @@ export async function getPlaceBySlugServer(slug: string): Promise<Place | null> 
     return seedPlaces.find((place) => place.slug === slug) ?? null;
   }
 
-  return mapPlaceRow(data);
+  const mapped = mapPlaceRow(data);
+  const seed = seedPlaces.find((place) => place.slug === slug);
+  return {
+    ...seed,
+    ...mapped,
+    image: seed?.image ?? mapped.image,
+    gallery: seed?.gallery?.length ? seed.gallery : mapped.gallery
+  };
 }
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
